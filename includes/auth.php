@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (hash_equals($user['password_hash'], $computed_hash)) {
                     $_SESSION['user_email'] = $user['email'];
                     $_SESSION['login_errors'] = 0;
-                    header("Location: login.php");
+                    header("Location: user_list.php");
                     exit;
                 } else {
                     $_SESSION['login_errors']++;

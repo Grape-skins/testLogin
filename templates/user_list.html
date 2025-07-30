@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户列表</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="user-list-container">
+        <div class="user-list-header">
+            <h1 class="user-list-title">用户列表</h1>
+            <div class="user-info">
+                <span>欢迎，<?php echo htmlspecialchars($_SESSION['user_email']); ?></span>
+                <a href="login.php?logout=1" class="logout-btn">退出登录</a>
+            </div>
+        </div>
+
+        <!-- 搜索和筛选区域 -->
+        <div class="search-filter-section">
+            <form method="POST" class="search-form" action="user_list.php">
+                <div class="search-row">
+                    <div class="search-group">
+                        <label for="search_email" class="search-label">邮箱搜索：</label>
+                        <input type="text" id="search_email" name="search_email" 
+                               value="<?php echo htmlspecialchars($search_email); ?>" 
+                               class="search-input" placeholder="输入邮箱地址搜索...">
+                    </div>
+                    <div class="per-page-group">
+                        <label for="per_page" class="per-page-label">每页显示：</label>
+                        <select id="per_page" name="per_page" class="per-page-select">
+                            <option value="5" <?php echo $per_page == 5 ? 'selected' : ''; ?>>5条</option>
+                            <option value="10" <?php echo $per_page == 10 ? 'selected' : ''; ?>>10条</option>
+                            <option value="20" <?php echo $per_page == 20 ? 'selected' : ''; ?>>20条</option>
+                            <option value="50" <?php echo $per_page == 50 ? 'selected' : ''; ?>>50条</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="search-btn">搜索</button>
+                    <button type="button" class="clear-btn">清除</button>
+                </div>
+                <!-- 隐藏字段用于分页 -->
+                <input type="hidden" name="page" value="1">
+            </form>
+        </div>
+
+        <!-- 统计信息 -->
+        <div class="stats-section">
+            <p class="stats-text">
+                共 <strong><?php echo $total_records; ?></strong> 个用户，
+                当前第 <strong><?php echo $page; ?></strong> 页，
+                共 <strong><?php echo $total_pages; ?></strong> 页
+            </p>
+        </div>
+
+        <!-- 用户列表 -->
+        <div class="user-table-container">
+            <?php if (empty($users)): ?>
+                <div class="no-data">
+                    <p>没有找到符合条件的用户</p>
+                </div>
+            <?php else: ?>
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th class="th-id">ID</th>
+                            <th class="th-email">邮箱地址</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($users as $user): ?>
+                            <tr class="user-row">
+                                <td class="td-id"><?php echo htmlspecialchars($user['id']); ?></td>
+                                <td class="td-email"><?php echo htmlspecialchars($user['email']); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php endif; ?>
+        </div>
+
+        <!-- 分页导航 -->
+        <?php if (!empty($pagination)): ?>
+            <div class="pagination-container">
+                <nav class="pagination-nav">
+                    <?php foreach ($pagination as $item): ?>
+                        <?php if ($item['class'] === 'page-ellipsis'): ?>
+                            <span class="page-ellipsis"><?php echo $item['text']; ?></span>
+                        <?php else: ?>
+                            <a href="<?php echo $item['url']; ?>" class="<?php echo $item['class']; ?>">
+                                <?php echo $item['text']; ?>
+                            </a>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </nav>
+            </div>
+        <?php endif; ?>
+    </div>
+
+    <!-- 隐藏表单用于分页 -->
+    <form id="hiddenForm" method="POST" action="user_list.php" style="display: none;">
+        <input type="hidden" name="page" id="hiddenPage">
+        <input type="hidden" name="per_page" id="hiddenPerPage">
+        <input type="hidden" name="search_email" id="hiddenSearchEmail">
+    </form>
+
+    <script src="js/main.js"></script>
+</body>
+</html> 
