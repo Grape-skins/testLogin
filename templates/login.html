@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户登录 / 注册</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="login-container">
+        <h1 class="form-title">用户中心</h1>
+        
+        <!-- 显示消息 -->
+        <?php if ($message): ?>
+            <div class='message <?php echo $message_type; ?>'><?php echo $message; ?></div>
+        <?php endif; ?>
+        
+        <form method="post" action="">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+            
+            <!-- 模式选择 -->
+            <div class="mode-selector">
+                <div class="mode-option">
+                    <input type="radio" name="mode" value="login" id="login" class="mode-radio" checked>
+                    <label for="login" class="mode-label">登录</label>
+                </div>
+                <div class="mode-option">
+                    <input type="radio" name="mode" value="register" id="register" class="mode-radio">
+                    <label for="register" class="mode-label">注册</label>
+                </div>
+            </div>
+            
+            <!-- 邮箱输入 -->
+            <div class="form-group">
+                <label for="email" class="form-label">邮箱地址</label>
+                <input type="email" name="email" id="email" class="form-input" 
+                    placeholder="请输入您的邮箱地址" required value="<?php echo htmlspecialchars($email ?? ''); ?>">
+                <div class="email-validation" id="email-validation">请输入有效的邮箱地址</div>
+            </div>
+            
+            <!-- 密码输入 -->
+            <div class="form-group">
+                <label for="password" class="form-label">密码</label>
+                <input type="password" name="password" id="password" class="form-input" 
+                    placeholder="请输入密码（至少6个字符）" required minlength="6">
+                <div class="password-strength" id="password-strength"></div>
+            </div>
+            
+            <!-- 提交按钮 -->
+            <button type="submit" class="submit-btn">
+                <span id="submit-text">登录</span>
+            </button>
+        </form>
+        
+        <div class="form-footer">
+            <p>安全登录，保护您的个人信息</p>
+        </div>
+    </div>
+    
+    <script src="js/main.js"></script>
+</body>
+</html> 
